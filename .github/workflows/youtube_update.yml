@@ -2,7 +2,7 @@ name: Daily YouTube ETL
 
 on:
   schedule:
-    - cron: "30 19 * * *"
+    - cron: "30 3 * * *"   # 09:00 IST
   workflow_dispatch:
 
 permissions:
@@ -32,11 +32,11 @@ jobs:
         run: python python/youtube_etl.py
 
       - name: Commit refreshed CSV
-        if: always()
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/
-          git diff --cached --quiet || git commit -m "chore: refresh data $(date -u +%F)"
+          git add data/*.csv
+          git diff --cached --quiet && echo "no change" && exit 0
+          git commit -m "chore: refresh data $(date -u +%F)"
           git pull --rebase origin main
           git push
