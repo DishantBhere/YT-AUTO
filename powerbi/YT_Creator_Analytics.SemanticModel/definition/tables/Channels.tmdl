@@ -1,0 +1,57 @@
+table Channels
+	lineageTag: 406cc444-8479-552d-800e-9a52204d77dc
+
+	column Channel_ID
+		dataType: string
+		lineageTag: 45b88302-97ff-5103-b604-23462a368e05
+		summarizeBy: none
+		sourceColumn: Channel_ID
+
+	column Channel_Name
+		dataType: string
+		lineageTag: 01d7203c-0570-594a-b6fe-ebb6e982f7fa
+		summarizeBy: none
+		sourceColumn: Channel_Name
+
+	column Subscribers
+		dataType: int64
+		formatString: #,0
+		lineageTag: f627d2c0-1bb4-5fd9-b9a8-eff84fc6ceb7
+		summarizeBy: none
+		sourceColumn: Subscribers
+
+	column TotalVideos
+		dataType: int64
+		formatString: #,0
+		lineageTag: 105f1c63-4a23-5455-8b8c-bbefecf84b7a
+		summarizeBy: none
+		sourceColumn: TotalVideos
+
+	column Views
+		dataType: int64
+		formatString: #,0
+		lineageTag: edcc4bfd-c55c-5757-9b73-ea5e905a7b6f
+		summarizeBy: none
+		sourceColumn: Views
+
+	column playlist_id
+		dataType: string
+		isHidden
+		lineageTag: 53893286-e11c-5a12-8132-c0655d3328f5
+		summarizeBy: none
+		sourceColumn: playlist_id
+
+	partition Channels = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com/DishantBhere/YT-AUTO/main/data/youtube_channels.csv"),[Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Channel_ID", type text}, {"Channel_Name", type text}, {"Subscribers", Int64.Type}, {"TotalVideos", Int64.Type}, {"Views", Int64.Type}, {"playlist_id", type text}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

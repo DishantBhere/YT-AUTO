@@ -1,0 +1,17 @@
+relationship d9307175-7ceb-580e-b8ab-6304082ac536
+	fromColumn: Videos.Channel_ID
+	toColumn: Channels.Channel_ID
+
+relationship 6f56ad70-1c6e-5de0-84d2-219e86003f08
+	fromColumn: History.Channel_ID
+	toColumn: Channels.Channel_ID
+
+relationship 9163f4c7-86ff-503d-9636-1acabbbe0d7e
+	fromColumn: Videos.Published_date
+	toColumn: Date.Date
+
+relationship 2cf64278-e734-48fb-b3ac-a24bf0968e19
+	joinOnDateBehavior: datePartOnly
+	fromColumn: History.Snapshot_Date
+	toColumn: LocalDateTable_eaac1688-30e1-46a7-b734-aef917e7b7cd.Date
+

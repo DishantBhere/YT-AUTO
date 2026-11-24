@@ -1,0 +1,104 @@
+table Videos
+	lineageTag: a18f490c-baae-5531-b176-e6762ce4bce2
+
+	column VideoID
+		dataType: string
+		lineageTag: dc37c9ed-a815-5f57-b634-c788d7b82cec
+		summarizeBy: none
+		sourceColumn: VideoID
+
+	column Channel_ID
+		dataType: string
+		isHidden
+		lineageTag: 36c6b294-c158-5b24-be21-8949e412f8db
+		summarizeBy: none
+		sourceColumn: Channel_ID
+
+	column Channel_Name
+		dataType: string
+		isHidden
+		lineageTag: e4018692-f211-54ab-a3ca-2bab9a8b801b
+		summarizeBy: none
+		sourceColumn: Channel_Name
+
+	column VideoTitle
+		dataType: string
+		lineageTag: b043cfbe-830c-5598-aa2d-99d2915bda5e
+		summarizeBy: none
+		sourceColumn: VideoTitle
+
+	column Published_date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 2207d608-68b2-50cf-8a86-9e35d5cf5821
+		summarizeBy: none
+		sourceColumn: Published_date
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Views
+		dataType: int64
+		formatString: #,0
+		lineageTag: 7c002d64-7cc5-5d50-8f75-59e192334260
+		summarizeBy: none
+		sourceColumn: Views
+
+	column Likes
+		dataType: int64
+		formatString: #,0
+		lineageTag: 3bd20493-b1dc-524f-bf17-51dbc2abc1ed
+		summarizeBy: none
+		sourceColumn: Likes
+
+	column Comments
+		dataType: int64
+		formatString: #,0
+		lineageTag: 1113c74c-5375-597c-b861-5af22b7904c6
+		summarizeBy: none
+		sourceColumn: Comments
+
+	column 'Title Length' = LEN(Videos[VideoTitle])
+		dataType: int64
+		formatString: 0
+		lineageTag: 35d9c0ae-9dce-5fe0-a52e-351dd4f55870
+		summarizeBy: none
+
+	column 'Title Length Bucket' = SWITCH(TRUE(), Videos[Title Length] < 30, "1. Under 30", Videos[Title Length] < 50, "2. 30-49", Videos[Title Length] < 70, "3. 50-69", "4. 70+")
+		dataType: string
+		lineageTag: 439c89f8-1e07-5012-afa5-eeb3f11fbeda
+		summarizeBy: none
+		sortByColumn: 'Title Length Bucket Sort'
+
+	column 'Title Length Bucket Sort' = SWITCH(TRUE(), Videos[Title Length] < 30, 1, Videos[Title Length] < 50, 2, Videos[Title Length] < 70, 3, 4)
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 2ad0b7d6-ff65-566b-8d8d-e32ae2838412
+		summarizeBy: none
+
+	column 'Video Age Days' = DATEDIFF(Videos[Published_date], MAX(History[Snapshot_Date]), DAY) + 1
+		dataType: int64
+		formatString: #,0
+		lineageTag: 49628ec5-9b22-5a35-9c23-35b71b4a302a
+		summarizeBy: none
+
+	column 'Views Per Day' = DIVIDE(Videos[Views], Videos[Video Age Days])
+		dataType: double
+		formatString: #,0.0
+		lineageTag: 23e8a79f-148c-502b-a77e-b79ce579e267
+		summarizeBy: none
+
+	partition Videos = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com/DishantBhere/YT-AUTO/main/data/youtube_videos.csv"),[Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"VideoID", type text}, {"Channel_ID", type text}, {"Channel_Name", type text}, {"VideoTitle", type text}, {"Published_date", type date}, {"Views", Int64.Type}, {"Likes", Int64.Type}, {"Comments", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

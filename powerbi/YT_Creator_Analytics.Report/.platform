@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "YT_Creator_Analytics"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "3860a76b-8ee2-485b-87dc-90a31fdfb598"
+  }
+}

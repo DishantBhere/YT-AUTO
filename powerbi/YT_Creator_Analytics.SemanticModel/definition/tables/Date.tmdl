@@ -1,0 +1,53 @@
+table Date
+	lineageTag: c3846eb7-817b-540e-8afc-036115c7c65d
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: yyyy-mm-dd
+		lineageTag: 5f7b58f7-0764-58d5-ae80-de4239b697d0
+		summarizeBy: none
+		sourceColumn: [Date]
+
+	column Year = YEAR('Date'[Date])
+		dataType: int64
+		formatString: 0
+		lineageTag: 960f8f87-a92d-5d5b-86a2-4280bfa3fc2c
+		summarizeBy: none
+
+	column 'Month No' = MONTH('Date'[Date])
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e3bfee74-ebda-5dc3-ba20-2518e943c7fe
+		summarizeBy: none
+
+	column Month = FORMAT('Date'[Date], "MMM")
+		dataType: string
+		lineageTag: 5b624795-a7f6-5cf7-a597-2b1ba92e1768
+		summarizeBy: none
+		sortByColumn: 'Month No'
+
+	column Year-Month = FORMAT('Date'[Date], "yyyy-MM")
+		dataType: string
+		lineageTag: 7609b0aa-23b8-540c-93a6-d4ecba7365d5
+		summarizeBy: none
+
+	column 'Weekday No' = WEEKDAY('Date'[Date], 2)
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 6231fa59-7fe2-5d68-9efb-64aa76416932
+		summarizeBy: none
+
+	column Weekday = FORMAT('Date'[Date], "ddd")
+		dataType: string
+		lineageTag: 699339f4-188c-5588-a12a-831a7004fda2
+		summarizeBy: none
+		sortByColumn: 'Weekday No'
+
+	partition Date = calculated
+		mode: import
+		source = CALENDAR(DATE(YEAR(MIN(Videos[Published_date])), 1, 1), DATE(YEAR(MAX(Videos[Published_date])), 12, 31))
+

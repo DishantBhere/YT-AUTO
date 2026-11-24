@@ -1,0 +1,118 @@
+table _Measures
+	lineageTag: dcfffdb2-b4aa-5874-9ad2-03bad60a4968
+
+	measure 'Total Videos' = COUNTROWS(Videos)
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: 698b9850-c7fd-58e6-aac2-42b4383760ae
+
+	measure 'Total Views' = SUM(Videos[Views])
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: a7f1a039-2822-5d2c-bc4c-a8b9838fc2b1
+
+	measure 'Total Likes' = SUM(Videos[Likes])
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: 8cd8dd8c-85e6-55e9-a8ac-a38e347db825
+
+	measure 'Total Comments' = SUM(Videos[Comments])
+		formatString: #,0
+		displayFolder: Volume
+		lineageTag: d24577fe-6d17-5132-af5c-9db3a543933d
+
+	measure 'Avg Views per Video' = DIVIDE([Total Views], [Total Videos])
+		formatString: #,0
+		displayFolder: Averages
+		lineageTag: 09ae3206-ddc1-54a2-a316-80f3de8c7904
+
+	measure 'Median Views per Video' = MEDIAN(Videos[Views])
+		formatString: #,0
+		displayFolder: Averages
+		lineageTag: fae53e78-a99e-534e-aaf0-dd63fdaec14c
+
+	measure 'Like Rate' = DIVIDE([Total Likes], [Total Views])
+		formatString: 0.00%
+		displayFolder: Engagement
+		lineageTag: 52f6e6b5-9c7f-5b21-98f8-fd1ad544bd4d
+
+	measure 'Comment Rate' = DIVIDE([Total Comments], [Total Views])
+		formatString: 0.000%
+		displayFolder: Engagement
+		lineageTag: 9d6033ab-c7f1-5850-ad6b-702ca6bc3cb0
+
+	measure 'Engagement Rate' = DIVIDE([Total Likes] + [Total Comments], [Total Views])
+		formatString: 0.00%
+		displayFolder: Engagement
+		lineageTag: b75437a0-a6f5-5839-8291-ab44b225feff
+
+	measure Subscribers = CALCULATE(SUM(History[Subscribers]), History[Snapshot_Date] = MAX(History[Snapshot_Date]))
+		formatString: #,0
+		displayFolder: Channel
+		lineageTag: 804d05b9-e469-5fdc-924b-a27ba87e72bc
+
+	measure 'Channel Lifetime Views' = CALCULATE(SUM(History[Views]), History[Snapshot_Date] = MAX(History[Snapshot_Date]))
+		formatString: #,0
+		displayFolder: Channel
+		lineageTag: 56999ca7-18fe-52fc-920d-d782d2482e9f
+
+	measure 'Views per Subscriber' = DIVIDE([Channel Lifetime Views], [Subscribers])
+		formatString: 0.0
+		displayFolder: Channel
+		lineageTag: e44dfc9c-53ba-501b-8b79-4f9bcf606165
+
+	measure 'Latest Snapshot' = MAX(History[Snapshot_Date])
+		formatString: yyyy-mm-dd
+		displayFolder: Channel
+		lineageTag: bbc4860b-c571-5628-abf8-abc7f31a4572
+
+	measure 'Views Share %' = DIVIDE([Total Views], CALCULATE([Total Views], ALLSELECTED(Channels)))
+		formatString: 0.0%
+		displayFolder: Volume
+		lineageTag: c70b6366-3a0f-5afa-b7d6-e85a2e9b3217
+
+	measure 'Videos Last 365d' = VAR _end = MAX(Videos[Published_date]) RETURN CALCULATE([Total Videos], DATESINPERIOD('Date'[Date], _end, -365, DAY))
+		formatString: #,0
+		displayFolder: Cadence
+		lineageTag: ab5b16c3-27b3-5f55-87f1-d66740984fa6
+
+	measure 'Views Last 365d Published' = VAR _end = MAX(Videos[Published_date]) RETURN CALCULATE([Total Views], DATESINPERIOD('Date'[Date], _end, -365, DAY))
+		formatString: #,0
+		displayFolder: Cadence
+		lineageTag: c27cb3d9-25af-5785-ba71-7c5f8bb67414
+
+	measure 'Avg Videos per Month' = VAR _months = DISTINCTCOUNT('Date'[Year-Month]) RETURN DIVIDE([Total Videos], _months)
+		formatString: 0.0
+		displayFolder: Cadence
+		lineageTag: 85f56ad0-83f9-53e1-8476-b6d3b8484e1e
+
+	measure 'Views PY' = CALCULATE([Total Views], SAMEPERIODLASTYEAR('Date'[Date]))
+		formatString: #,0
+		displayFolder: Time Intelligence
+		lineageTag: 7248912f-03b9-50c0-83ec-aeff11e77980
+
+	measure 'Views YoY %' = DIVIDE([Total Views] - [Views PY], [Views PY])
+		formatString: 0.0%
+		displayFolder: Time Intelligence
+		lineageTag: b0def04b-a6bc-51c6-bbaf-2b7aa2022d90
+
+	measure 'Top Video Views' = MAX(Videos[Views])
+		formatString: #,0
+		displayFolder: Top
+		lineageTag: df33f7d9-9555-5de1-87f0-f0f787be5b69
+
+	measure 'Top Video Title' = CALCULATE(MAX(Videos[VideoTitle]), FILTER(Videos, Videos[Views] = [Top Video Views]))
+		displayFolder: Top
+		lineageTag: 82d80263-2079-520e-a03e-5b86a23565b8
+
+	column Dummy
+		dataType: int64
+		isHidden
+		lineageTag: 1627ccc0-e055-5be3-9668-3af1978b9721
+		summarizeBy: none
+		sourceColumn: [Dummy]
+
+	partition _Measures = calculated
+		mode: import
+		source = ROW("Dummy", 1)
+

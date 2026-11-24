@@ -1,0 +1,87 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 1136.5768771657797,
+            "y": 172.04354838271729
+          },
+          "nodeIndex": "_Measures",
+          "nodeLineageTag": "dcfffdb2-b4aa-5874-9ad2-03bad60a4968",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.17941566988623,
+            "y": 224.76878482938264
+          },
+          "nodeIndex": "Channels",
+          "nodeLineageTag": "406cc444-8479-552d-800e-9a52204d77dc",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 902.57687716577971,
+            "y": -50
+          },
+          "nodeIndex": "Date",
+          "nodeLineageTag": "c3846eb7-817b-540e-8afc-036115c7c65d",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": 370.08709676543464
+          },
+          "nodeIndex": "History",
+          "nodeLineageTag": "085feb2b-4c59-5cab-aa21-11612a0c293e",
+          "size": {
+            "height": 224,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.37645520037063,
+            "y": 38.871234307168947
+          },
+          "nodeIndex": "Videos",
+          "nodeLineageTag": "a18f490c-baae-5531-b176-e6762ce4bce2",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

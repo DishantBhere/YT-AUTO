@@ -1,0 +1,75 @@
+table History
+	lineageTag: 085feb2b-4c59-5cab-aa21-11612a0c293e
+
+	column Snapshot_Date
+		dataType: dateTime
+		formatString: yyyy-mm-dd
+		lineageTag: 62d79f05-f437-572b-adf4-1c311dc3e6f2
+		summarizeBy: none
+		sourceColumn: Snapshot_Date
+
+		variation Variation
+			isDefault
+			relationship: 2cf64278-e734-48fb-b3ac-a24bf0968e19
+			defaultHierarchy: LocalDateTable_eaac1688-30e1-46a7-b734-aef917e7b7cd.'Date Hierarchy'
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Channel_ID
+		dataType: string
+		isHidden
+		lineageTag: 1dda428d-9a42-5331-80ec-1487675054c5
+		summarizeBy: none
+		sourceColumn: Channel_ID
+
+	column Channel_Name
+		dataType: string
+		isHidden
+		lineageTag: 1b52cddc-f15b-56fc-a8e1-036cc6f1873d
+		summarizeBy: none
+		sourceColumn: Channel_Name
+
+	column Subscribers
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: c81cb6fe-6b96-5b70-bbba-1759a6294585
+		summarizeBy: sum
+		sourceColumn: Subscribers
+
+		annotation SummarizationSetBy = Automatic
+
+	column TotalVideos
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: dfb5269a-4b5a-5064-9e37-e7e101109889
+		summarizeBy: sum
+		sourceColumn: TotalVideos
+
+		annotation SummarizationSetBy = Automatic
+
+	column Views
+		dataType: int64
+		isHidden
+		formatString: #,0
+		lineageTag: ae48a019-1408-5c32-92eb-f6b09b3a8eaa
+		summarizeBy: sum
+		sourceColumn: Views
+
+		annotation SummarizationSetBy = Automatic
+
+	partition History = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(Web.Contents("https://raw.githubusercontent.com/DishantBhere/YT-AUTO/main/data/youtube_history.csv"),[Delimiter=",", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),
+				    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    Typed = Table.TransformColumnTypes(Promoted, {{"Snapshot_Date", type date}, {"Channel_ID", type text}, {"Channel_Name", type text}, {"Subscribers", Int64.Type}, {"TotalVideos", Int64.Type}, {"Views", Int64.Type}}, "en-US")
+				in
+				    Typed
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
