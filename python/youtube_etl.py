@@ -30,6 +30,7 @@ CHANNELS = {
     "UCNU_lfiiWBdtULKOw6X0Dig": "Krish Naik",
     "UCk7NcgnqCmui1AV7MTXZwOw": "Ankit Bansal",
     "UCcfngi7_ASuo5jdWX0bNauQ": "How to PowerBI",
+    "UC8uU_wruBMHeeRma49dtZKA": "Chandoo",
     "UCOMG0iHHi27owoyxGvURxiQ": "Analytics with Nag",
 }
 
