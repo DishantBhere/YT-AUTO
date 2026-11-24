@@ -181,7 +181,7 @@ def main():
 
     subject = f"[YT-AUTO] {'Daily report' if status.lower() == 'success' else 'ETL FAILED'} · {datetime.now(IST):%d %b %Y}"
     msg = MIMEMultipart("alternative")
-    msg["Subject"], msg["From"], msg["To"] = subject, user, to
+    msg["Subject"], msg["From"], msg["To"] = subject, f"YT-AUTO Bot <{user}>", to
     msg.attach(MIMEText("HTML email. Open in an HTML-capable client.", "plain"))
     msg.attach(MIMEText(html, "html", "utf-8"))
 
