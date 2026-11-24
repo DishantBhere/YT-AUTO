@@ -40,3 +40,15 @@ jobs:
           git commit -m "chore: refresh data $(date -u +%F)"
           git pull --rebase origin main
           git push
+
+      - name: Send email report
+        if: always()
+        env:
+          MAIL_USER: ${{ secrets.MAIL_USER }}
+          MAIL_PASS: ${{ secrets.MAIL_PASS }}
+          MAIL_TO: ${{ secrets.MAIL_TO }}
+          STATUS: ${{ job.status }}
+          TRIGGER: ${{ github.event_name }}
+          REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: python python/send_report.py
